@@ -1,0 +1,42 @@
+name: Make Video
+
+on:
+  workflow_dispatch:
+    inputs:
+      idea:
+        description: "Video idea"
+        required: true
+      scenes:
+        description: "Number of scenes"
+        default: "6"
+      format:
+        description: "vertical or horizontal"
+        default: "vertical"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pip install -r requirements.txt
+      - name: Generate
+        env:
+          POLLINATIONS_API_KEY: ${{ secrets.POLLINATIONS_API_KEY }}
+          IDEA: ${{ inputs.idea }}
+          SCENES: ${{ inputs.scenes }}
+          FORMAT: ${{ inputs.format }}
+        run: python pipeline.py "$IDEA" --scenes "$SCENES" --format "$FORMAT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: video
+          path: |
+            output/final_video.mp4
+            output/script.json
+            output/metadata.json
+          retention-days: 14
