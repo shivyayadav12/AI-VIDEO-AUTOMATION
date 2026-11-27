@@ -3,4 +3,4 @@ moviepy>=2.0,<3
 pillow>=10,<12
 python-dotenv>=1,<2
 openai>=1.40,<3
-edge-tts>=6.1,<8\nopenai>=1.40,<3\nPillow>=10,<12\nmoviepy>=2.0,<3\n
+edge-tts>=6.1,<8
