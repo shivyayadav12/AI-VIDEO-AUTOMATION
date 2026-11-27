@@ -1,9 +1,16 @@
 name: Daily AI Video
 
 on:
+  # नया आइडिया या series settings बदलते ही वीडियो बनाओ
+  push:
+    branches:
+      - main
+    paths:
+      - "IDEA.md"
+      - "series.json"
   workflow_dispatch:
   schedule:
-    # 8:00 PM India Standard Time (14:30 UTC). GitHub may start scheduled jobs late.
+    # रोज़ रात 8:00 बजे IST (14:30 UTC)
     - cron: "30 14 * * *"
 
 permissions:
@@ -36,7 +43,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate today's video
+      - name: Generate images, Hindi voice and video
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python daily_pipeline.py
@@ -49,7 +56,7 @@ jobs:
           git diff --cached --quiet || git commit -m "Update daily story continuity"
           git push
 
-      - name: Upload generated video and metadata
+      - name: Upload finished video
         uses: actions/upload-artifact@v4
         with:
           name: daily-ai-video-${{ github.run_number }}
