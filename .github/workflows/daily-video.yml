@@ -1,0 +1,61 @@
+name: Daily AI Video
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 8:00 PM India Standard Time (14:30 UTC). GitHub may start scheduled jobs late.
+    - cron: "30 14 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-ai-video
+  cancel-in-progress: false
+
+jobs:
+  create-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate today's video
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python daily_pipeline.py
+
+      - name: Save story continuity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add story_state.json
+          git diff --cached --quiet || git commit -m "Update daily story continuity"
+          git push
+
+      - name: Upload generated video and metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-ai-video-${{ github.run_number }}
+          path: |
+            output/daily_video.mp4
+            output/metadata.json
+            output/script.txt
+          if-no-files-found: error
+          retention-days: 14
