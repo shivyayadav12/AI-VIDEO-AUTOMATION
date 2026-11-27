@@ -1,32 +1,30 @@
-# AI-VIDEO-AUTOMATION
+# AI Video Automation
 
-GitHub Actions-based daily Hindi episodic video generator.
+यह GitHub Actions पर चलने वाला daily Hindi episodic video generator है।
 
-## What is implemented
-- Reads one continuing series idea from IDEA.md.
-- Remembers the previous episode summary and recurring character description in story_state.json.
-- Generates the next connected Hindi episode script and four scene prompts.
-- Generates four scene images with OpenAI image generation.
-- Generates Hindi-capable narration with OpenAI text-to-speech.
-- Renders an MP4 video with FFmpeg/MoviePy.
-- Creates title, caption, description, hashtags and tags in output/metadata.json.
-- Runs daily at 20:00 India Standard Time (14:30 UTC), and can also be started manually from GitHub Actions.
-- Saves generated files as a GitHub Actions artifact for 14 days.
+## क्या करता है
+- `IDEA.md` में दिए गए एक मुख्य विचार से हर रन में अगला भाग लिखता है।
+- `story_state.json` में पिछली कहानी और पात्रों की पहचान रखता है।
+- OpenAI API से स्क्रिप्ट और scene images बनाता है।
+- Edge TTS से हिंदी AI narration बनाता है।
+- `series.json` के अनुसार 9:16 Shorts/Reels या 16:9 वीडियो render करता है।
+- शीर्षक, caption, description, hashtags और tags वाली metadata file बनाता है।
+- हर दिन 20:00 IST (14:30 UTC) पर चलने के लिए schedule है; GitHub scheduled jobs कुछ देर से शुरू हो सकते हैं।
+- तैयार वीडियो GitHub Actions artifact में मिलता है।
 
-## One-time setup
-1. Open repository Settings → Secrets and variables → Actions.
-2. Add a repository secret named OPENAI_API_KEY. Never put the key in source code or commit it.
-3. Edit IDEA.md with the one-time main story idea.
-4. Open Actions → Daily AI Video → Run workflow to test the first episode.
-5. After a successful run, open that workflow run and download the artifact named daily-ai-video-...
+## एक बार की ज़रूरी सेटिंग
+1. `IDEA.md` में अपनी सीरीज़ का मुख्य आइडिया लिखें।
+2. Repository → Settings → Secrets and variables → Actions → New repository secret खोलें।
+3. Secret का नाम `OPENAI_API_KEY` रखें और अपनी OpenAI API key डालें। Key को source code या chat में न डालें।
+4. Actions tab में **Daily AI Video** workflow खोलकर **Run workflow** दबाएँ।
 
-## Important limitations
-- OpenAI API usage is paid and subject to your account's access, usage limits and billing.
-- GitHub Actions schedule can start late; exact 20:00 delivery is not guaranteed.
-- The current renderer outputs a 16:9 MP4. Vertical 9:16 rendering is not yet implemented in this pipeline.
-- Social publishing to YouTube, Instagram and Facebook is not yet connected. It needs official platform OAuth/API credentials and permissions. No social account is automatically posted to at this stage.
-- The generated character design is guided by prompts and prior character notes; exact face/outfit consistency is not guaranteed.
-- Review AI-generated content before publishing. No system can guarantee virality.
+OpenAI API usage का अलग शुल्क लग सकता है। Edge TTS voice service इंटरनेट से चलती है; इसमें चुनी गई synthetic Hindi voice किसी व्यक्ति की आवाज़ की नकल नहीं करती।
 
-## Existing manual Streamlit app
-The app.py interface remains available for manually uploading images, choosing a synthetic Hindi voice, and generating a slideshow.
+## Output
+हर सफल run में `output/daily_video.mp4`, `output/script.txt` और `output/metadata.json` artifact के रूप में सेव होते हैं। Artifact 14 दिन उपलब्ध रहता है। कहानी की निरंतरता `story_state.json` में commit होती है।
+
+## सीमाएँ
+- यह अभी image-based animated slideshow है, full motion AI video नहीं।
+- YouTube, Instagram और Facebook पर auto-upload अभी configured नहीं है। उसके लिए platform APIs और account authorization अलग से जोड़ने होंगे।
+- AI पात्रों की visual consistency की गारंटी नहीं है।
+- वायरल होने की गारंटी नहीं दी जा सकती; publish करने से पहले metadata और वीडियो review करें।
