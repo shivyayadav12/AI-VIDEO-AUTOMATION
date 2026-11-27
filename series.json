@@ -1,12 +1,8 @@
 {
-  "idea": "Yahan apni kahani/video series ka pehla idea likhen",
   "language": "Hindi",
   "duration_seconds": 30,
   "aspect_ratio": "9:16",
   "scenes": 4,
   "voice": "hi-IN-MadhurNeural",
-  "series_title": "Meri AI Kahani",
-  "last_episode": 0,
-  "last_story_summary": "",
-  "characters": "Har episode mein wahi characters, kapde, chehre aur visual style banaye rakhein."
+  "series_title": "Meri AI Kahani"
 }
