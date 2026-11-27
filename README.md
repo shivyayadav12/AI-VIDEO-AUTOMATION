@@ -1,33 +1,32 @@
 # AI-VIDEO-AUTOMATION
 
-A starter app for creating vertical Shorts/Reels (9:16) and horizontal videos (16:9).
+GitHub Actions-based daily Hindi episodic video generator.
 
-## Current features
-- Enter a video idea and write a narration script.
-- If OPENAI_API_KEY is configured, generate a Hindi script from the idea using OpenAI.
-- Generate Hindi synthetic narration using a selectable female or male AI voice.
-- Upload scene images and assemble an MP4 slideshow with the AI narration.
-- Preview and download the video.
+## What is implemented
+- Reads one continuing series idea from IDEA.md.
+- Remembers the previous episode summary and recurring character description in story_state.json.
+- Generates the next connected Hindi episode script and four scene prompts.
+- Generates four scene images with OpenAI image generation.
+- Generates Hindi-capable narration with OpenAI text-to-speech.
+- Renders an MP4 video with FFmpeg/MoviePy.
+- Creates title, caption, description, hashtags and tags in output/metadata.json.
+- Runs daily at 20:00 India Standard Time (14:30 UTC), and can also be started manually from GitHub Actions.
+- Saves generated files as a GitHub Actions artifact for 14 days.
 
-## Voice and privacy
-- The app currently uses standard synthetic Hindi voices; it does not clone or imitate the user's voice.
-- Text-to-speech uses the Edge TTS online service and requires internet access. Availability and service terms can change.
-- Do not enter private, sensitive, or confidential text into a third-party speech service.
-- Use only content and images you own or have permission to use.
+## One-time setup
+1. Open repository Settings → Secrets and variables → Actions.
+2. Add a repository secret named OPENAI_API_KEY. Never put the key in source code or commit it.
+3. Edit IDEA.md with the one-time main story idea.
+4. Open Actions → Daily AI Video → Run workflow to test the first episode.
+5. After a successful run, open that workflow run and download the artifact named daily-ai-video-...
 
-## Setup
-1. Install Python 3.10 or newer.
-2. Create and activate a virtual environment.
-3. Install dependencies: pip install -r requirements.txt
-4. Copy .env.example to .env on your own computer/server.
-5. Add an OpenAI API key to .env if you want automatic script generation. Keep it secret; never commit .env.
-6. Run: streamlit run app.py
+## Important limitations
+- OpenAI API usage is paid and subject to your account's access, usage limits and billing.
+- GitHub Actions schedule can start late; exact 20:00 delivery is not guaranteed.
+- The current renderer outputs a 16:9 MP4. Vertical 9:16 rendering is not yet implemented in this pipeline.
+- Social publishing to YouTube, Instagram and Facebook is not yet connected. It needs official platform OAuth/API credentials and permissions. No social account is automatically posted to at this stage.
+- The generated character design is guided by prompts and prior character notes; exact face/outfit consistency is not guaranteed.
+- Review AI-generated content before publishing. No system can guarantee virality.
 
-Without an OpenAI API key, you can still type the script yourself and generate the Hindi AI narration.
-
-## Not implemented yet
-- Automatic AI image/video generation (scene images must currently be uploaded).
-- Automatic background music and sound effects.
-- YouTube, Instagram, and Facebook publishing. These require official APIs, account permissions, and user confirmation before posting.
-
-This is an evolving starter project, not yet a fully automatic one-click video pipeline.
+## Existing manual Streamlit app
+The app.py interface remains available for manually uploading images, choosing a synthetic Hindi voice, and generating a slideshow.
