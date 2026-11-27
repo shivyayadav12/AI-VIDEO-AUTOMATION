@@ -107,7 +107,7 @@ def create_images(client, scenes, aspect_ratio):
     frame = "vertical 9:16 portrait composition" if aspect_ratio == "9:16" else "horizontal 16:9 landscape composition"
     for index, scene in enumerate(scenes, 1):
         result = client.images.generate(
-            model="gpt-image-1",
+            model="gpt-image-2.5-sunburst",
             prompt=(
                 scene["image_prompt"]
                 + f" Polished cinematic 3D animated family film still, {frame}. "
